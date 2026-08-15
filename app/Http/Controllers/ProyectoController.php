@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proyecto;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ProyectoController extends Controller
@@ -12,31 +13,31 @@ class ProyectoController extends Controller
     /**
      * Lista todos los proyectos.
      */
-public function index(): View
-{
-    $proyectos = Proyecto::obtenerTodos();
+    public function index(): View
+    {
+        $proyectos = Proyecto::all();
 
-    $uf = $this->obtenerUfPorFecha(
-        now()->format('Y-m-d')
-    );
+        $uf = $this->obtenerUfPorFecha(
+            now()->format('Y-m-d')
+        );
 
-    return view('proyectos.index', compact(
-        'proyectos',
-        'uf'
-    ));
-}
+        return view('proyectos.index', compact(
+            'proyectos',
+            'uf'
+        ));
+    }
 
     /**
      * Muestra el formulario para crear un proyecto.
      */
     public function create(): View
-{
-    $uf = $this->obtenerUfPorFecha(
-        now()->format('Y-m-d')
-    );
+    {
+        $uf = $this->obtenerUfPorFecha(
+            now()->format('Y-m-d')
+        );
 
-    return view('proyectos.create', compact('uf'));
-}
+        return view('proyectos.create', compact('uf'));
+    }
 
     /**
      * Procesa la creación de un proyecto.
@@ -45,7 +46,9 @@ public function index(): View
     {
         $datos = $this->validarProyecto($request);
 
-        $proyecto = Proyecto::crear($datos);
+        $datos['created_by'] = Auth::id();
+
+        $proyecto = Proyecto::create($datos);
 
         return view('proyectos.show', [
             'proyecto' => $proyecto,
@@ -58,13 +61,7 @@ public function index(): View
      */
     public function show(int $proyecto): View
     {
-        $proyectoEncontrado = Proyecto::obtenerPorId($proyecto);
-
-        abort_if(
-            $proyectoEncontrado === null,
-            404,
-            'Proyecto no encontrado.'
-        );
+        $proyectoEncontrado = Proyecto::findOrFail($proyecto);
 
         return view('proyectos.show', [
             'proyecto' => $proyectoEncontrado,
@@ -76,13 +73,7 @@ public function index(): View
      */
     public function edit(int $proyecto): View
     {
-        $proyectoEncontrado = Proyecto::obtenerPorId($proyecto);
-
-        abort_if(
-            $proyectoEncontrado === null,
-            404,
-            'Proyecto no encontrado.'
-        );
+        $proyectoEncontrado = Proyecto::findOrFail($proyecto);
 
         return view('proyectos.edit', [
             'proyecto' => $proyectoEncontrado,
@@ -98,16 +89,9 @@ public function index(): View
     ): View {
         $datos = $this->validarProyecto($request);
 
-        $proyectoActualizado = Proyecto::actualizar(
-            $proyecto,
-            $datos
-        );
+        $proyectoActualizado = Proyecto::findOrFail($proyecto);
 
-        abort_if(
-            $proyectoActualizado === null,
-            404,
-            'Proyecto no encontrado.'
-        );
+        $proyectoActualizado->update($datos);
 
         return view('proyectos.show', [
             'proyecto' => $proyectoActualizado,
@@ -120,13 +104,7 @@ public function index(): View
      */
     public function confirmDelete(int $proyecto): View
     {
-        $proyectoEncontrado = Proyecto::obtenerPorId($proyecto);
-
-        abort_if(
-            $proyectoEncontrado === null,
-            404,
-            'Proyecto no encontrado.'
-        );
+        $proyectoEncontrado = Proyecto::findOrFail($proyecto);
 
         return view('proyectos.delete', [
             'proyecto' => $proyectoEncontrado,
@@ -138,13 +116,9 @@ public function index(): View
      */
     public function destroy(int $proyecto): RedirectResponse
     {
-        $eliminado = Proyecto::eliminar($proyecto);
+        $proyectoEncontrado = Proyecto::findOrFail($proyecto);
 
-        abort_if(
-            !$eliminado,
-            404,
-            'Proyecto no encontrado.'
-        );
+        $proyectoEncontrado->delete();
 
         return redirect()
             ->route('proyectos.index')
@@ -153,23 +127,25 @@ public function index(): View
                 'Proyecto eliminado correctamente.'
             );
     }
-/**
- * Simula la consulta del valor de la UF según una fecha.
- */
-public function obtenerUfPorFecha(string $fecha): array
-{
-    $valoresUf = [
-        '2026-07-21' => 39580.12,
-        '2026-07-22' => 39595.48,
-        '2026-07-23' => 39610.35,
-        '2026-07-24' => 39625.80,
-    ];
 
-    return [
-        'fecha' => $fecha,
-        'valor' => $valoresUf[$fecha] ?? 39610.35,
-    ];
-}
+    /**
+     * Simula la consulta del valor de la UF según una fecha.
+     */
+    public function obtenerUfPorFecha(string $fecha): array
+    {
+        $valoresUf = [
+            '2026-07-21' => 39580.12,
+            '2026-07-22' => 39595.48,
+            '2026-07-23' => 39610.35,
+            '2026-07-24' => 39625.80,
+        ];
+
+        return [
+            'fecha' => $fecha,
+            'valor' => $valoresUf[$fecha] ?? 39610.35,
+        ];
+    }
+
     /**
      * Valida los datos comunes de creación y actualización.
      */
