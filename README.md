@@ -144,3 +144,214 @@ El desarrollo correspondiente a la Evaluación 2 se encuentra en:
 ## Objetivo académico
 
 El proyecto permite comprender de manera progresiva cómo una aplicación Laravel pasa desde una estructura con datos simulados a una aplicación conectada a una base de datos real, incorporando persistencia, modelos Eloquent, autenticación, seguridad básica y control de acceso.
+
+## Evaluación 3
+
+En la tercera evaluación se desarrolló una **API RESTful** para administrar los proyectos almacenados en MySQL.
+
+La API funciona de forma independiente de las vistas Blade y responde con datos en formato JSON.
+
+Para mantener la aplicación anterior, se conservaron dos controladores:
+
+```text
+app/Http/Controllers/ProyectoController.php
+app/Http/Controllers/Api/ProyectoController.php
+```
+
+El primero administra las vistas web y el segundo procesa las solicitudes de la API.
+
+### Rutas de la API
+
+Las rutas se encuentran definidas en:
+
+```text
+routes/api.php
+```
+
+Laravel las registra con el prefijo automático `/api`.
+
+| Método   | Endpoint              | Descripción                    | Respuesta exitosa |
+| -------- | --------------------- | ------------------------------ | ----------------- |
+| `GET`    | `/api/proyectos`      | Lista todos los proyectos      | `200 OK`          |
+| `POST`   | `/api/proyectos`      | Crea un proyecto               | `201 Created`     |
+| `GET`    | `/api/proyectos/{id}` | Busca un proyecto por ID       | `200 OK`          |
+| `PUT`    | `/api/proyectos/{id}` | Actualiza un proyecto completo | `200 OK`          |
+| `DELETE` | `/api/proyectos/{id}` | Elimina un proyecto            | `204 No Content`  |
+
+### Campos del proyecto
+
+Para crear o actualizar un proyecto se utilizan los siguientes campos:
+
+```json
+{
+    "nombre": "Implementación API REST",
+    "fecha_inicio": "2026-09-10",
+    "estado": "En desarrollo",
+    "responsable": "Kim",
+    "monto": 1250000,
+    "created_by": 1
+}
+```
+
+El campo `created_by` debe contener el ID de un usuario existente en la tabla `users`.
+
+### Validaciones
+
+La API verifica que:
+
+* Todos los campos estén presentes.
+* Los campos obligatorios no estén vacíos.
+* `nombre`, `estado` y `responsable` sean textos válidos.
+* `fecha_inicio` contenga una fecha válida.
+* `monto` sea numérico y no negativo.
+* `created_by` corresponda a un usuario existente.
+
+Cuando los datos no cumplen las validaciones, Laravel responde con:
+
+```text
+422 Unprocessable Content
+```
+
+### Códigos HTTP utilizados
+
+| Código | Significado                                      |
+| ------ | ------------------------------------------------ |
+| `200`  | Consulta o actualización realizada correctamente |
+| `201`  | Proyecto creado correctamente                    |
+| `204`  | Proyecto eliminado; respuesta sin contenido      |
+| `404`  | Proyecto no encontrado                           |
+| `422`  | Datos recibidos que no cumplen las validaciones  |
+
+
+### Pruebas y evidencias
+
+Las operaciones de la API fueron verificadas mediante Postman.
+
+La colección exportada se encuentra en:
+
+```text
+docs/postman/Evaluacion-3-API-Proyectos.postman_collection.json
+```
+
+Esta colección permite ejecutar las solicitudes utilizadas para:
+
+* Listar proyectos.
+* Crear proyectos.
+* Buscar proyectos por ID.
+* Actualizar proyectos.
+* Eliminar proyectos.
+* Comprobar respuestas `404`.
+* Comprobar las validaciones y la respuesta `422`.
+
+Las capturas de las pruebas realizadas, junto con sus resultados y códigos HTTP, se encuentran en:
+
+```text
+docs/postman/Eva3_cerda_kimberly.pdf
+```
+
+Para recibir correctamente las respuestas de error en formato JSON, las solicitudes incluyen:
+
+```text
+Accept: application/json
+```
+
+Las solicitudes que envían datos también utilizan:
+
+```text
+Content-Type: application/json
+```
+
+## Ejecución del proyecto
+
+### Requisitos
+
+* PHP 8.2 o superior.
+* Composer.
+* MySQL.
+* Node.js y npm.
+* Laragon u otro servidor local compatible.
+
+### Preparación
+
+Instalar las dependencias de PHP:
+
+```bash
+composer install
+```
+
+Instalar las dependencias del frontend:
+
+```bash
+npm install
+```
+
+Crear el archivo de configuración local:
+
+```bash
+copy .env.example .env
+```
+
+Generar la clave de Laravel:
+
+```bash
+php artisan key:generate
+```
+
+Configurar la conexión con MySQL en `.env` y ejecutar las migraciones:
+
+```bash
+php artisan migrate
+```
+
+Compilar los recursos visuales:
+
+```bash
+npm run build
+```
+
+### Dirección local
+
+En el entorno utilizado durante el desarrollo, la aplicación web se ejecuta en:
+
+```text
+http://ipss-web1-001.test:8085
+```
+
+Durante la ejecución local, la API puede consultarse mediante:
+
+```text
+http://ipss-web1-001.test:8085/api/proyectos
+```
+
+El dominio y el puerto pueden variar según la configuración del servidor local. Esta dirección no corresponde a una publicación en Internet.
+
+## Tecnologías utilizadas
+
+* PHP
+* Laravel 11
+* MySQL
+* Eloquent ORM
+* API RESTful
+* JSON
+* Blade
+* Tailwind CSS
+* Vite
+* Postman
+* Laragon
+* Git
+* GitHub
+* Visual Studio Code
+
+## Control de versiones
+
+El proyecto conserva cada etapa en una rama independiente:
+
+* `main`: versión inicial del proyecto.
+* `evaluacion-2`: persistencia, autenticación y mejoras visuales.
+* `evaluacion-3-api`: API RESTful y operaciones CRUD mediante HTTP.
+
+## Objetivo académico
+
+El proyecto permite comprender progresivamente cómo una aplicación Laravel evoluciona desde datos simulados hacia una aplicación conectada a MySQL, con persistencia, autenticación, vistas web y una API RESTful.
+
+La Evaluación 3 permite aplicar rutas API, controladores, modelos Eloquent, validaciones, respuestas JSON y códigos HTTP adecuados para crear, consultar, actualizar y eliminar información.

@@ -1,0 +1,173 @@
+{
+  "info": {
+    "_postman_id": "8224d683-b968-4c35-b7a4-b868956ce1c8",
+    "name": "Evaluacion 3 - API Proyectos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54645669",
+    "_collection_link": "https://go.postman.co/collection/54645669-8224d683-b968-4c35-b7a4-b868956ce1c8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Listar proyectos",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://ipss-web1-001.test:8085/api/proyectos",
+          "protocol": "http",
+          "host": [
+            "ipss-web1-001",
+            "test"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "proyectos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Crear proyecto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nombre\": \"Proyecto prueba campos incompletos\",\r\n    \"fecha_inicio\": \"2026-09-10\",\r\n    \"estado\": \"\",\r\n    \"responsable\": \"Kimberly\",\r\n    \"monto\": 1250000,\r\n    \"created_by\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://ipss-web1-001.test:8085/api/proyectos",
+          "protocol": "http",
+          "host": [
+            "ipss-web1-001",
+            "test"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "proyectos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actualizar proyecto",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nombre\": \"Implementacion API REST Actualizada (ID eliminada)\",\r\n    \"fecha_inicio\": \"2026-09-10\",\r\n    \"estado\": \"Finalizado\",\r\n    \"responsable\": \"Kim\",\r\n    \"monto\": 1500000,\r\n    \"created_by\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://ipss-web1-001.test:8085/api/proyectos/5",
+          "protocol": "http",
+          "host": [
+            "ipss-web1-001",
+            "test"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "proyectos",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buscar proyecto por ID",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://ipss-web1-001.test:8085/api/proyectos/5",
+          "protocol": "http",
+          "host": [
+            "ipss-web1-001",
+            "test"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "proyectos",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Eliminar proyecto por ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://ipss-web1-001.test:8085/api/proyectos/5",
+          "protocol": "http",
+          "host": [
+            "ipss-web1-001",
+            "test"
+          ],
+          "port": "8085",
+          "path": [
+            "api",
+            "proyectos",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
